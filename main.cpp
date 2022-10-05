@@ -53,6 +53,7 @@ int main()
 {
 	//parseExpression("1.23_2*3+.2yz*(2^(4- 3)/1.5)x");
 	parseExpression("1.23*3+.2yz*(2+(4- 3)/1.5)x");
+	parseExpression("x_z");
 	updateVarMap();
 	printf("result is: %Lf\n", solve());
 	// printf("%d\n", var.size());
@@ -283,14 +284,31 @@ void updateVarMap()
 	}
 }
 
-long double power(long double a, long double b)
+long double power(long double base, long double initPower)
 {
-	return 0;
+	long double result = 1;
+    long long power = (long long)initPower;
+    while (power > 0) {
+        if (power & 1)
+        {
+            result = result * base ;
+        }
+        power >>= 1;
+        base = base * base;
+    }
+    return result;
 }
 
-long double root(long double a, long double b)
+long double root(long double base, long double initPower)
 {
-	return 0;
+	long double i = base / 2;
+    long long nowPower = (long long)initPower;
+    while (!equal(power(i,initPower),base))
+    {
+        i = i - ((power(i,initPower) - base) / (nowPower * power(i,initPower - 1)));
+    }
+    
+    return i;
 }
 
 inline bool isUnary(char op)
