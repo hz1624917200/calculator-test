@@ -5,9 +5,11 @@
 #include <string>
 #include <set>
 #include <unordered_set>
+#include <iostream>
 
 #define FATAL printf
 #define precision 1e-8L
+#define MAX_EXPR_LENGTH 100
 
 // Commands:
 // Math op: +-*/^_~		^: power; _: extract root
@@ -52,7 +54,10 @@ long double root(long double a, long double b);
 int main()
 {
 	//parseExpression("1.23_2*3+.2yz*(2^(4- 3)/1.5)x");
-	parseExpression("1.23*3+.2yz*(2+(4- 3)/1.5)x");
+	std::string expr;
+	std::getline(std::cin, expr);
+	parseExpression(expr);
+	// parseExpression("1.23*3+.2yz*(2+(4- 3)/1.5)x");
 	// parseExpression("x_z");
 	updateVarMap();
 	printf("result is: %Lf\n", solve());
@@ -279,7 +284,7 @@ long double calc(long double x, char op)
 void updateVarMap()
 {
 	for (auto &[k, v]: var) {
-		printf("value of %c: ", k);
+		// printf("value of %c: ", k);
 		scanf("%Lf", &v);
 	}
 }
