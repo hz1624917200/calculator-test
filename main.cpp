@@ -43,7 +43,6 @@ long double solve();
 
 bool equal(long double a, long double b);
 
-// TODO !!!!!!!
 // power, return a ^ b
 long double power(long double a, long double b);
 // extract root
@@ -51,10 +50,16 @@ long double power(long double a, long double b);
 long double root(long double a, long double b);
 
 
-int main()
+int main(int argc, char *argv[])
 {
 	//parseExpression("1.23_2*3+.2yz*(2^(4- 3)/1.5)x");
 	std::string expr;
+	if (argc != 2) {
+		FATAL("Usage: calculator input_file");
+		exit(-1);
+	}
+
+	freopen(argv[1], "r", stdin);
 	std::getline(std::cin, expr);
 	parseExpression(expr);
 	// parseExpression("1.23*3+.2yz*(2+(4- 3)/1.5)x");
