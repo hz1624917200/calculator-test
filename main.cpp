@@ -53,7 +53,7 @@ int main()
 {
 	//parseExpression("1.23_2*3+.2yz*(2^(4- 3)/1.5)x");
 	parseExpression("1.23*3+.2yz*(2+(4- 3)/1.5)x");
-	parseExpression("x_z");
+	// parseExpression("x_z");
 	updateVarMap();
 	printf("result is: %Lf\n", solve());
 	// printf("%d\n", var.size());
@@ -73,7 +73,7 @@ void parseExpression(std::string expression)
 			if (cur == '.') {
 				if (has_point) {
 					FATAL("Error: extra digital point at %d\n", i);
-					return;
+					exit(-1);
 				}
 				else {
 					has_point = true;
@@ -108,7 +108,7 @@ void parseExpression(std::string expression)
 				}
 				if (opstack.empty()) {
 					FATAL("Error: unpaired bracket ')' at %d\n", i);
-					return;
+					exit(-1);
 				}
 				opstack.pop();
 				auto_mut = true;
@@ -128,13 +128,13 @@ void parseExpression(std::string expression)
 		}
 		else {
 			FATAL("Error: invalid character '%c' at %d\n", cur, i);
-			return;
+			exit(-1);
 		}
 	}
 	while (!opstack.empty()) {
 		if (opstack.top() == '(') {
 			FATAL("Error: unpaired bracket '('\n");
-			return;
+			exit(-1);
 		}
 		commandSequence.push_back(opstack.top());
 		opstack.pop();
@@ -189,15 +189,15 @@ long double solve()
 	}
 	if (opstk.size() != 1) {
 		FATAL("opstk size check failed");
-		return -1;
+		exit(-1);
 	}
 	return (opstk.top());
 fail_dataseq:
 	FATAL("opdata size check failed");
-	return -1;
+	exit(-1);
 fail_opstk:
 	FATAL("opstk underflow detected");
-	return -1;
+	exit(-1);
 }
 
 int priority(char op)
@@ -227,7 +227,7 @@ int priority(char op)
 		return 7;
 	}
 	FATAL("Invalid op priority: %c\n", op);
-	return 0;
+	exit(-1);
 }
 
 long double calc(long double a, long double b, char op)
@@ -253,7 +253,7 @@ long double calc(long double a, long double b, char op)
 	case '/':
 		if (equal(b, 0)) {
 			FATAL("divided by 0");
-			return -1;
+			exit(-1);
 		}
 		return (a / b);
 	case '^':
@@ -262,7 +262,7 @@ long double calc(long double a, long double b, char op)
 		return root(a, b);
 	}
 	FATAL("invalid OP %c\n", op);
-	return 0;
+	exit(-1);
 }
 
 long double calc(long double x, char op)
@@ -273,7 +273,7 @@ long double calc(long double x, char op)
 		return (!x);
 	}
 	FATAL("invalid OP %c\n", op);
-	return 0;
+	exit(-1);
 }
 
 void updateVarMap()
@@ -287,14 +287,30 @@ void updateVarMap()
 long double power(long double base, long double initPower)
 {
 	long double result = 1;
-    long long power = (long long)initPower;
-    while (power > 0) {
-        if (power & 1)
+    long long nowPower = (long long)initPower;
+	int isNegative = 0;
+	if(nowPower != initPower)
+	{
+		FATAL("Error: exponent cannot be decimal\n");
+		exit(-1);
+	}
+	if(nowPower < 0)
+    {
+        isNegative = 1;
+        nowPower = -nowPower;
+    }
+    while (nowPower > 0) 
+	{
+        if (nowPower & 1)
         {
             result = result * base ;
         }
-        power >>= 1;
+        nowPower >>= 1;
         base = base * base;
+    }
+	if(isNegative == 1)
+    {
+        result = 1 / result;
     }
     return result;
 }
@@ -303,11 +319,31 @@ long double root(long double base, long double initPower)
 {
 	long double i = base / 2;
     long long nowPower = (long long)initPower;
+	int isNegative = 0;
+	if(nowPower != initPower)
+	{
+		FATAL("Error: exponent cannot be decimal\n");
+		exit(-1);
+	}
+	if(base < 0)
+	{
+		FATAL("Error: base number cannot be negative\n");
+		exit(-1);
+	}
+	if(nowPower < 0)
+    {
+        isNegative = 1;
+        nowPower = -nowPower;
+		initPower = -initPower;
+	}
     while (!equal(power(i,initPower),base))
     {
         i = i - ((power(i,initPower) - base) / (nowPower * power(i,initPower - 1)));
     }
-    
+    if(isNegative == 1)
+    {
+        i = 1 / i;
+    }
     return i;
 }
 

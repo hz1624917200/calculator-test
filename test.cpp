@@ -2,8 +2,8 @@
 #include <string>
 
 int main() {
-	std::string s = ".123456.321";
+	std::string s = "5.123456e+6";
 	long double a = std::stold(s);
-	printf("%Lf;", 1e-8L);
+	printf("%lld", (long long)a);
 	return 0;
 }
