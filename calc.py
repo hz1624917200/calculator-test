@@ -4,12 +4,9 @@ import os
 var_operand = [chr(i) for i in range(ord('a'), ord('z') + 1)] + \
               [chr(i) for i in range(ord('A'), ord('Z') + 1)]
 
-if not os.path.exists('./result'):
-    os.mkdir('./result')
-
-for infile in os.listdir('./testcase'):
-    expressions = open('./testcase/' + infile)
-    output = open('./result/' + infile.replace('.', '_res.'), 'w')
+def calc(infile_name: str):
+    expressions = open('./testcase/' + infile_name)
+    output = []
     expression = expressions.readline()
     # '+0'防止最后一个运算是开方，导致加右括号失败
     expression = expression.strip() + '+0'
@@ -77,15 +74,23 @@ for infile in os.listdir('./testcase'):
                 res = '1'
             elif res == '0.0':
                 res = '0'
-            output.write(res + '\n')
+            output.append(res)
         except ZeroDivisionError as e:
-            output.write(str(e) + '\n')
+            output.append(str(e))
         except TypeError as e:
             # 若出现虚数比较大小会触发此异常
-            output.write(str(e) + '\n')
+            output.append(str(e))
         except OverflowError as e:
             # 太大了，溢出了
-            output.write(str(e) + '\n')
+            output.append(str(e))
         # 无变量
         if not any([i in expression for i in var_operand]):
             break
+    return output
+
+def main():
+    for infile in os.listdir('./testcase'):
+        print(calc(infile)[0])
+
+if __name__ == "__main__":
+    main()
