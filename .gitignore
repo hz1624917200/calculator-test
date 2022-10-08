@@ -2,3 +2,6 @@
 *.exe
 testcase/
 gcov-res/
+*.gc*
+correct_list.txt
+calculator

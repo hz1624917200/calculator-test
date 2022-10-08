@@ -14,7 +14,10 @@ if __name__ == "__main__":
 	valid_ind = 0
 	correct_list = []
 	# clean
-	os.system("/usr/bin/rm ./gcov-res/*")
+	if not os.path.exists('./gcov-res'):
+		os.mkdir('./gcov-res')
+	else:
+		os.system("/usr/bin/rm ./gcov-res/*")
 	for infile in os.listdir("./testcase"):
 		# infile is standalone filename
 		# print(infile)

@@ -2,7 +2,7 @@ import random
 import os
 
 # 生成的用例数
-gen_num = 10
+gen_num = 100
 # file = open("./expressions.txt", "w")
 
 # 后者为概率
