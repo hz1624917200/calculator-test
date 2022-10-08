@@ -2,7 +2,7 @@ import random
 import os
 
 # 生成的用例数
-gen_num = 100
+gen_num = 10
 # file = open("./expressions.txt", "w")
 
 # 后者为概率
@@ -36,6 +36,9 @@ rbracket = ')'
 def main():
     if not os.path.exists('./testcase'):
         os.mkdir('./testcase')
+    else:
+        os.system("/usr/bin/rm ./testcase/*")
+        # os.remove("./testcase/*")
     for i in range(gen_num):
         file = open("./testcase/{}.in".format(i), "w")
         expression = ''
