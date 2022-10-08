@@ -4,9 +4,9 @@ import os
 var_operand = [chr(i) for i in range(ord('a'), ord('z') + 1)] + \
               [chr(i) for i in range(ord('A'), ord('Z') + 1)]
 
-def calc(infile_name: str):
+def calc(infile_name: str) -> str:
     expressions = open('./testcase/' + infile_name)
-    output = []
+    # output = []
     expression = expressions.readline()
     # '+0'防止最后一个运算是开方，导致加右括号失败
     expression = expression.strip() + '+0'
@@ -74,15 +74,19 @@ def calc(infile_name: str):
                 res = '1'
             elif res == '0.0':
                 res = '0'
-            output.append(res)
+            # output.append(res)
+            output = res
         except ZeroDivisionError as e:
-            output.append(str(e))
+            # output.append(str(e))
+            output = str(e)
         except TypeError as e:
             # 若出现虚数比较大小会触发此异常
-            output.append(str(e))
+            # output.append(str(e))
+            output = str(e)
         except OverflowError as e:
             # 太大了，溢出了
-            output.append(str(e))
+            # output.append(str(e))
+            output = str(e)
         # 无变量
         if not any([i in expression for i in var_operand]):
             break

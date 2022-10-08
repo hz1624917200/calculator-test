@@ -74,7 +74,7 @@ void parseExpression(std::string expression)
 {
 	std::set<char> validop = { '!', '+', '-', '*', '/', '^', '_', '>', '=', '<', '&', '|', '(', ')' };     // valid operator
 	std::stack<char> opstack;
-	bool skip_num, has_point, auto_mut = false;
+	bool skip_num = false, has_point = false, auto_mut = false, has_op = false;
 
 	for (int i = 0; i < expression.length(); i++) {
 		char cur = expression[i];
@@ -93,7 +93,7 @@ void parseExpression(std::string expression)
 		}
 		has_point = false;
 		skip_num = false;
-		if (isdigit(cur) || cur == '.') {     // operand (immediate)
+		if (isdigit(cur) || cur == '.' || (cur == '-' && has_op)) {     // operand (immediate)
 			if (auto_mut)	// add auto multiply
 				push_op('*', opstack);
 			immSequence.push_back(std::stold(expression.substr(i)));
@@ -102,6 +102,7 @@ void parseExpression(std::string expression)
 				has_point = true;
 			skip_num = true;
 			auto_mut = true;
+			has_op = false;
 		}
 		else if (validop.count(cur)) {  // valid operator
 			if (cur == '(') {
@@ -127,6 +128,7 @@ void parseExpression(std::string expression)
 				push_op(cur, opstack);
 				auto_mut = false;
 			}
+			has_op = true;
 		}
 		else if (isalpha(cur)) {	// variants
 			if (auto_mut)	// add auto multiply
