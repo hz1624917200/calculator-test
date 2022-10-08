@@ -2,7 +2,8 @@ import random
 import os
 
 # 生成的用例数
-gen_num = 100
+# gen_num = 100
+# use input
 # file = open("./expressions.txt", "w")
 
 # 后者为概率
@@ -39,7 +40,7 @@ def main():
     else:
         os.system("/usr/bin/rm ./testcase/*")
         # os.remove("./testcase/*")
-    for i in range(gen_num):
+    for i in range(int(input())):
         file = open("./testcase/{}.in".format(i), "w")
         expression = ''
         lbracket_cnt = 0
