@@ -110,6 +110,7 @@ void parseExpression(std::string expression)
 					push_op('*', opstack);
 				opstack.push(cur);
 				auto_mut = false;
+				valid_neg = true;
 				continue;
 			}
 			if (cur == ')') {
@@ -127,8 +128,8 @@ void parseExpression(std::string expression)
 			else {
 				push_op(cur, opstack);
 				auto_mut = false;
+				valid_neg = true;
 			}
-			valid_neg = true;
 		}
 		else if (isalpha(cur)) {	// variants
 			if (auto_mut)	// add auto multiply
@@ -338,9 +339,9 @@ long double root(long double base, long double initPower)
 		FATAL("Error: exponent cannot be decimal\n");
 		exit(-1);
 	}
-	if(base < 0)
+	if((base < 0) && (nowPower % 2 == 0))
 	{
-		FATAL("Error: base number cannot be negative\n");
+		FATAL("Error: base cannot be negative when exponent is even\n");
 		exit(-1);
 	}
 	if(nowPower < 0)

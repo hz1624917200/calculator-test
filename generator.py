@@ -43,23 +43,32 @@ def main():
         var_operand_list = []
         allow_float = True
         allow_bracket = True
+        only_23 = False
         while bool_rand(0.9):
             # 随机插入括号
             if allow_bracket and bool_rand(0.1):
+                # 一定概率省略乘号
+                if expression and expression[-1] == '*' and bool_rand(0.5):
+                    expression = expression[: -1]
                 expression += lbracket
                 lbracket_cnt += 1
             allow_bracket = True
-            # # 随机插入一元运算符
-            if bool_rand(0.1):
+            # 随机插入一元运算符，开方后不插入
+            if bool_rand(0.1) and not only_23:
                 expression += random.choice(unary_operator)
             # 拼接运算数
-            if bool_rand(0.9):
-                s = imm_operand(allow_float)
+            # 不允许有小数或括号时也不允许有字母
+            if bool_rand(0.9) or allow_float or allow_bracket:
+                s = imm_operand(allow_float) if not only_23 else str(random.choice([2, 3]))
+                only_23 = False
             else:
                 # 不允许重复
                 s = random.choice(var_operand)
                 while s in [i[0] for i in var_operand_list]:
                     s = random.choice(var_operand)
+                # 一定概率省略乘号
+                if expression and expression[-1] == '*' and bool_rand(0.5):
+                    expression = expression[: -1]
                 var_operand_list.append((s, allow_float))
             allow_float = True
             expression += s
@@ -74,20 +83,29 @@ def main():
                     break
             else:  # for-else骚操作
                 expression += random.choice(list(binary_operator)[0])
-            # 不允许生成小数开方
-            if expression[-1] == '_':
+            # 不允许生成小数乘方
+            if expression[-1] in '^':
                 allow_float = False
                 allow_bracket = False  # 防止括号里产生小数
-        # # 随机插入一元运算符
-        if bool_rand(0.1):
+            #开方只允许23
+            if expression[-1] in '_':
+                only_23 = True
+                allow_bracket = False
+        # 随机插入一元运算符，开方后不插入
+        if bool_rand(0.1) and not only_23:
             expression += random.choice(unary_operator)
-        if bool_rand(0.9):
-            s = imm_operand(allow_float)
+        # 不允许有小数或括号时也不允许有字母
+        if bool_rand(0.9) or allow_float or allow_bracket:
+            s = imm_operand(allow_float) if not only_23 else str(random.choice([2, 3]))
+            only_23 = False
         else:
             # 不允许重复
             s = random.choice(var_operand)
             while s in [i[0] for i in var_operand_list]:
                 s = random.choice(var_operand)
+            # 一定概率省略乘号
+            if expression and expression[-1] == '*' and bool_rand(0.5):
+                expression = expression[: -1]
             var_operand_list.append((s, allow_float))
         allow_float = True
         expression += s
