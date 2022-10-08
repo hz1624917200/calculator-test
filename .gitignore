@@ -5,3 +5,4 @@ gcov-res/
 *.gc*
 correct_list.txt
 calculator
+__pycache__/
