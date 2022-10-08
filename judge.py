@@ -43,7 +43,7 @@ if __name__ == "__main__":
 				res = eval(res[11:])
 				ans = eval(ans)
 				if equal(res, ans):
-					print("{} Passed".format(infile))
+					# print("{} Passed".format(infile))
 					correct = True
 				else:
 					correct = False
@@ -53,7 +53,7 @@ if __name__ == "__main__":
 			valid = False
 		if not correct:
 			print(infile)
-			print("res: {}ans: {}".format(res, ans))
+			print("res: {}\nans: {}".format(res, ans))
 	
 		if valid:
 			os.system("llvm-cov-12 gcov -f -b calculator.gcda > /dev/null")
@@ -64,6 +64,8 @@ if __name__ == "__main__":
 			valid_ind += 1
 	
 	# end
+	correct_cnt = len(correct_list)
+	print("Test Summary:\npassed {} in {} cases, {:.2f}%".format(correct_cnt, valid_ind + 1, correct_cnt / (valid_ind + 1) * 100))
 	os.system("/usr/bin/rm *.gcov") 
 	# os.remove("*.gcov")
 	with open("correct_list.txt", "w") as f:
