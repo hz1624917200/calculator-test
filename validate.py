@@ -27,6 +27,7 @@ def calc(infile_name: str) -> str:
         tmp += c
         if c == '_':
             root = True
+    _vars.sort()
     # 替换
     expression = tmp.replace('_', '**(1/')
     while True:

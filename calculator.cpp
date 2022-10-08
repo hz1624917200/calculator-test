@@ -74,7 +74,7 @@ void parseExpression(std::string expression)
 {
 	std::set<char> validop = { '!', '+', '-', '*', '/', '^', '_', '>', '=', '<', '&', '|', '(', ')' };     // valid operator
 	std::stack<char> opstack;
-	bool skip_num = false, has_point = false, auto_mut = false, has_op = false;
+	bool skip_num = false, has_point = false, auto_mut = false, valid_neg = true;
 
 	for (int i = 0; i < expression.length(); i++) {
 		char cur = expression[i];
@@ -93,7 +93,7 @@ void parseExpression(std::string expression)
 		}
 		has_point = false;
 		skip_num = false;
-		if (isdigit(cur) || cur == '.' || (cur == '-' && has_op)) {     // operand (immediate)
+		if (isdigit(cur) || cur == '.' || (cur == '-' && valid_neg)) {     // operand (immediate)
 			if (auto_mut)	// add auto multiply
 				push_op('*', opstack);
 			immSequence.push_back(std::stold(expression.substr(i)));
@@ -102,7 +102,7 @@ void parseExpression(std::string expression)
 				has_point = true;
 			skip_num = true;
 			auto_mut = true;
-			has_op = false;
+			valid_neg = false;
 		}
 		else if (validop.count(cur)) {  // valid operator
 			if (cur == '(') {
@@ -128,7 +128,7 @@ void parseExpression(std::string expression)
 				push_op(cur, opstack);
 				auto_mut = false;
 			}
-			has_op = true;
+			valid_neg = true;
 		}
 		else if (isalpha(cur)) {	// variants
 			if (auto_mut)	// add auto multiply
@@ -137,6 +137,7 @@ void parseExpression(std::string expression)
 			varSequence.push_back(cur);
 			commandSequence.push_back('v');
 			auto_mut = true;
+			valid_neg = false;
 		}
 		else {
 			FATAL("Error: invalid character '%c' at %d\n", cur, i);
@@ -200,15 +201,15 @@ long double solve()
 		}
 	}
 	if (opstk.size() != 1) {
-		FATAL("opstk size check failed");
+		FATAL("opstk size check failed\n");
 		exit(-1);
 	}
 	return (opstk.top());
 fail_dataseq:
-	FATAL("opdata size check failed");
+	FATAL("opdata size check failed\n");
 	exit(-1);
 fail_opstk:
-	FATAL("opstk underflow detected");
+	FATAL("opstk underflow detected\n");
 	exit(-1);
 }
 
@@ -264,7 +265,7 @@ long double calc(long double a, long double b, char op)
 		return (a * b);
 	case '/':
 		if (equal(b, 0)) {
-			FATAL("divided by 0");
+			FATAL("divided by 0\n");
 			exit(-1);
 		}
 		return (a / b);
