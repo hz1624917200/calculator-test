@@ -47,6 +47,7 @@ def main():
         allow_float = True
         allow_bracket = True
         only_23 = False
+        cannot_sqrt = False
         while bool_rand(0.9):
             # 随机插入括号
             if allow_bracket and bool_rand(0.1):
@@ -64,6 +65,8 @@ def main():
             if bool_rand(0.9) or allow_float or allow_bracket:
                 s = imm_operand(allow_float) if not only_23 else str(random.choice([2, 3]))
                 only_23 = False
+                if float(s) < 0:
+                    cannot_sqrt= True
             else:
                 # 不允许重复
                 s = random.choice(var_operand)
@@ -82,7 +85,11 @@ def main():
             # 拼接运算符
             for operators, probability in binary_operator.items():
                 if bool_rand(probability):
-                    expression += random.choice(operators)
+                    operator = random.choice(operators)
+                    if cannot_sqrt and operator == '_':
+                        continue
+                    expression += operator
+                    cannot_sqrt = False
                     break
             else:  # for-else骚操作
                 expression += random.choice(list(binary_operator)[0])
