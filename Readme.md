@@ -12,6 +12,14 @@
 
 ## Run
 
+Build:
+
+```bash
+clang++ calculator.cpp -o calculator -fprofile-arcs -ftest-coverage
+```
+
+Generate testcases and run
+
 ```python
 python generator.py
 <num_of_testcases>
