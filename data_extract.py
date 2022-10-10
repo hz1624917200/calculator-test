@@ -59,8 +59,8 @@ def draw_bar():
 	
 	for list_name in ['tarantula','zoltar','sokal','fossum']:
 		fig = plt.figure(figsize=(12,6),dpi=100)
-		plt.bar(range(len(index[:50])),eval("{}[:50]".format(list_name)))
-		plt.xticks(range(len(index[:50])),index[:50])
+		plt.bar(range(len(index)),eval("{}".format(list_name)))
+		plt.xticks(range(len(index)),index)
 		plt.title(list_name)
 	plt.show()
 
