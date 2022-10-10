@@ -1,10 +1,8 @@
-from asyncore import read
 from io import TextIOWrapper
 import os
 import re
 import pandas as pd
 from matplotlib import pyplot as plt
-import matplotlib
 import csv
 from typing import Dict, List
 
