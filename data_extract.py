@@ -1,8 +1,10 @@
+
 from io import TextIOWrapper
 import os
 import re
 import pandas as pd
 from matplotlib import pyplot as plt
+import matplotlib
 import csv
 from typing import Dict, List
 
@@ -47,15 +49,16 @@ def generator_csv():
 	df['Fossum'] = (n * ((df['N_cf'] - 0.5) ** 2))/((df['N_cf'] + df['N_cs']) * (df['N_cf'] + df['N_uf']))
 	df.to_csv('output.csv')
 
-def draw_bar():
-	data = pd.read_csv('output.csv',usecols=['Tarantula','Zoltar','Sokal','Fossum'])
+def draw_bar(filename):
+	data = pd.read_csv(filename,usecols=['Tarantula','Zoltar','Sokal','Fossum'])
 	tarantula = list(data['Tarantula'])
 	zoltar = list(data['Zoltar'])
 	sokal = list(data['Sokal'])
 	fossum = list(data['Fossum'])
-	with open('./output.csv','r') as fp:
+	with open(filename,'r') as fp:
 		reader = csv.DictReader(fp)
 		index = [row[''] for row in reader]
+
 	
 	for list_name in ['tarantula','zoltar','sokal','fossum']:
 		fig = plt.figure(figsize=(12,6),dpi=100)
@@ -64,11 +67,20 @@ def draw_bar():
 		plt.title(list_name)
 	plt.show()
 
+def draw_top10(filename,algorithm):
+	data = pd.read_csv(filename,usecols=['Tarantula','Zoltar','Sokal','Fossum'])
+	tarantula = data.sort_values('Tarantula',ascending=False)['Tarantula']
+	zoltar = data.sort_values('Zoltar',ascending=False)['Zoltar']
+	sokal = data.sort_values('Sokal',ascending=False)['Sokal']
+	fossum = data.sort_values('Fossum',ascending=False)['Fossum']
+	print(eval(algorithm)[:10])
+
 if __name__ == "__main__":
 	# extract execution info of lines
 	for fname in os.listdir("./gcov-res"):
 		with open("./gcov-res/{}".format(fname), "r") as f:
 			update_global(stat_exec(f), int(fname[:-5]) in passed_test)
 	generator_csv()
-	draw_bar()
+	draw_bar('output-success.csv')
+	draw_top10('output-success.csv','tarantula')
 	# TODO: Start From param calculate
